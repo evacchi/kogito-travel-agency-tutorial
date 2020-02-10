@@ -11,10 +11,13 @@ import javax.inject.Inject;
 import org.acme.travels.Address;
 import org.acme.travels.Traveller;
 import org.acme.travels.Trip;
+import org.acme.travels.rules.VisaCheck;
 import org.drools.core.common.InternalAgenda;
 import org.junit.jupiter.api.Test;
 import org.kie.api.runtime.KieSession;
 import org.kie.kogito.rules.KieRuntimeBuilder;
+import org.kie.kogito.rules.RuleUnit;
+import org.kie.kogito.rules.RuleUnitInstance;
 
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -23,42 +26,41 @@ public class VisaRulesTest {
 
 
 	@Inject
-	KieRuntimeBuilder ruleRuntime;
+	RuleUnit<VisaCheck> unit;
 	
 	@Test
 	public void testVisaNotRequiredRule() {
 		
-		assertNotNull(ruleRuntime);
+		assertNotNull(unit);
 		
 		Traveller traveller = new Traveller("John", "Doe", "john.doe@example.com", "American", new Address("main street", "Boston", "10005", "US"));
         Trip trip = new Trip("New York", "US", new Date(), new Date());
 
-        KieSession ksession = ruleRuntime.newKieSession();
-        ((InternalAgenda) ksession.getAgenda()).activateRuleFlowGroup("visas");
-        ksession.insert(trip);
-        ksession.insert(traveller);
-        ksession.fireAllRules();
+        VisaCheck visaCheck = new VisaCheck();
+        RuleUnitInstance<VisaCheck> instance = unit.createInstance(visaCheck);
+
+        visaCheck.getTrip().add(trip);
+        visaCheck.getTraveller().add(traveller);
         
-        ksession.dispose();
-        
+        instance.fire();
+                
         assertFalse(trip.isVisaRequired());                
 	}
 	
 	@Test
 	public void testVisaRequiredRule() {
 		
-		assertNotNull(ruleRuntime);
+		assertNotNull(unit);
 		
 		Traveller traveller = new Traveller("Jan", "Kowalski", "jan.kowalski@example.com", "Polish", new Address("polna", "Krakow", "32000", "Poland"));
         Trip trip = new Trip("New York", "US", new Date(), new Date());
 
-        KieSession ksession = ruleRuntime.newKieSession();
-        ((InternalAgenda) ksession.getAgenda()).activateRuleFlowGroup("visas");
-        ksession.insert(trip);
-        ksession.insert(traveller);
-        ksession.fireAllRules();
+        VisaCheck visaCheck = new VisaCheck();
+        RuleUnitInstance<VisaCheck> instance = unit.createInstance(visaCheck);
+        visaCheck.getTrip().add(trip);
+        visaCheck.getTraveller().add(traveller);
         
-        ksession.dispose();
+        instance.fire();
         
         assertTrue(trip.isVisaRequired());                
 	}
