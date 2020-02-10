@@ -171,7 +171,7 @@ To run the generated native executable, generated in `target/`, execute
 
 ### Start Kogito Data Index Service
 
-It can be downloaded from [Kogito Data Index Service 0.4.0](http://repo2.maven.org/maven2/org/kie/kogito/data-index-service/0.4.0/data-index-service-0.4.0-runner.jar)
+It can be downloaded from [Kogito Data Index Service 0.7.1](https://search.maven.org/remotecontent?filepath=org/kie/kogito/data-index-service/0.7.1/data-index-service-0.7.1-runner.jar)
 
 NOTE: Here can be found other versions [Kogito Data Index Service versions](http://repo2.maven.org/maven2/org/kie/kogito/data-index-service)
 
@@ -182,7 +182,7 @@ This service works with .proto files that define the data model. Once **Kogito T
 To start the **Kogito Data Index Service** just past the full path of the proto files folder and execute 
 
 ```
-java -jar  -Dkogito.protobuf.folder={full path to proto files folder} data-index-service-0.4.0-runner.jar
+java -jar  -Dkogito.protobuf.folder={full path to proto files folder} data-index-service-0.7.1-runner.jar
 ```
 
 NOTE: If we want to run 'Kogito Travels Service' and 'Kogito Visa Service' using the same Kogito Data Index Service, we will copy both files travels.proto and visaApplications.proto at the same 'kogito.protobuf.folder' that is  passed as parameter, and will start the data index service once.
